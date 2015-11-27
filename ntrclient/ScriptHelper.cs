@@ -34,60 +34,65 @@ namespace ntrclient {
 
 
 
-		public void connect(string host, int port) {
-			Program.ntrClient.setServer(host, port);
-			Program.ntrClient.connectToServer();
-		}
+	public void connect(string host, int port) {
+		Program.ntrClient.setServer(host, port);
+		Program.ntrClient.connectToServer();
+	}
 
-		public void reload() {
-			Program.ntrClient.sendReloadPacket();
-		}
-		
-		public void listprocess() {
-			Program.ntrClient.sendEmptyPacket(5);
-		}
+	public void reload() {
+		Program.ntrClient.sendReloadPacket();
+	}
+	
+	public void listprocess() {
+		Program.ntrClient.sendEmptyPacket(5);
+	}
 
-		public void listthread(int pid) {
-			Program.ntrClient.sendEmptyPacket(7, (uint) pid);
-		}
+	public void listthread(int pid) {
+		Program.ntrClient.sendEmptyPacket(7, (uint) pid);
+	}
 
-		public void attachprocess(int pid, uint patchAddr = 0) {
-			Program.ntrClient.sendEmptyPacket(6, (uint) pid, patchAddr);
-		}
+	public void attachprocess(int pid, uint patchAddr = 0) {
+		Program.ntrClient.sendEmptyPacket(6, (uint) pid, patchAddr);
+	}
 
-        public void queryhandle(int pid) {
-            Program.ntrClient.sendEmptyPacket(12, (uint)pid );
+	public void queryhandle(int pid) {
+        	Program.ntrClient.sendEmptyPacket(12, (uint)pid );
         }
 
-		public void memlayout(int pid) {
-			Program.ntrClient.sendEmptyPacket(8, (uint)pid);
-		}
+	public void memlayout(int pid) {
+		Program.ntrClient.sendEmptyPacket(8, (uint)pid);
+	}
 
-		public void disconnect() {
-			Program.ntrClient.disconnect();
-		}
+	public void disconnect() {
+		Program.ntrClient.disconnect();
+	}
 
-		public void sayhello() {
-			Program.ntrClient.sendHelloPacket();
-		}
+	public void sayhello() {
+		Program.ntrClient.sendHelloPacket();
+	}
 
-		public void data(uint addr, uint size = 0x100, int pid = -1, string filename = null) {
-			if (filename == null && size > 1024) {
-				size = 1024;
-			}
-			Program.ntrClient.sendReadMemPacket(addr, size, (uint) pid, filename);
+	public void data(uint addr, uint size = 0x100, int pid = -1, string filename = null) {
+		if (filename == null && size > 1024) {
+			size = 1024;
 		}
+		Program.ntrClient.sendReadMemPacket(addr, size, (uint) pid, filename);
+	}
 
-		public void write(uint addr, byte[] buf, int pid=-1) {
-			Program.ntrClient.sendWriteMemPacket(addr, (uint)pid, buf);
-		}
+	public void write(uint addr, byte[] buf, int pid=-1) {
+		Program.ntrClient.sendWriteMemPacket(addr, (uint)pid, buf);
+	}
+	
+	public void writefile(uint addr, string str, int pid=-1) {
+        	byte[] buf = File.ReadAllBytes(str);
+		Program.ntrClient.sendWriteMemPacket(addr, (uint)pid, buf);
+        }
 
-		public void sendfile(String localPath, String remotePath) {
-			FileStream fs = new FileStream(localPath, FileMode.Open);
-			byte[] buf = new byte[fs.Length];
-			fs.Read(buf, 0, buf.Length);
-			fs.Close();
-			Program.ntrClient.sendSaveFilePacket(remotePath, buf);
+	public void sendfile(String localPath, String remotePath) {
+		FileStream fs = new FileStream(localPath, FileMode.Open);
+		byte[] buf = new byte[fs.Length];
+		fs.Read(buf, 0, buf.Length);
+		fs.Close();
+		Program.ntrClient.sendSaveFilePacket(remotePath, buf);
 		}
 	}
 }
